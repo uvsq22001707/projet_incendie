@@ -80,8 +80,11 @@ def change_carre(event):
     elif tableau [i][j] ==3:
         x, y = i * cote, j * cote
         carre =canvas.create_rectangle(x,y, x + cote, y + cote,fill= couleur_prairie)
+        tableau[i][j]= 4
+    elif tableau [i][j] ==4:
+        x, y = i * cote, j * cote
+        carre =canvas.create_rectangle(x,y, x + cote, y + cote,fill= "white")
         tableau[i][j]= 1
-
     
 
 
@@ -91,6 +94,15 @@ def cree_carre():
     tableau=[]
     for i in range(nombre_colonne):
         tableau.append([1] * nombre_ligne)
+
+def allumage_feu(event):
+    i, j = coord_carre(event.x, event.y)
+    if tableau[i][j] > 2:
+        print("feu")
+        x, y = i * cote, j * cote
+        carre =canvas.create_rectangle(x,y, x + cote, y + cote,fill= couleur_feu)
+        tableau[i][j] = 5
+
 ############################################
 #programme principal 
 racine= tk.Tk()
@@ -102,6 +114,7 @@ canvas.grid(row =0)
 carre()
 cree_carre()
 canvas.bind("<Button-1>",change_carre)
+canvas.bind("<Button-3>",allumage_feu)
 
 
 
