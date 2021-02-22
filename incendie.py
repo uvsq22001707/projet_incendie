@@ -20,20 +20,26 @@ import tkinter as tk
 
 
 ############################################
-#définition des constantes
+#DEFINITION DES CONSTANTES
 longueur = 500 #taille temporaire a changé ou non
 hauteur= 500   #taille temporaire a changé ou non
 cellule =25 #taille des cellules temporaires
+cote = 20 # nombre de carré
+#couleur des cases
+couleur_eau = "blue"
+couleur_foret ="green" 
+couleur_feu= "red"
+couleur_prairie="yellow"
+couleur_tiede ="grey"
+couleur_eteind="black"
+nombre_colonne = hauteur // cote
+nombre_ligne = longueur //cote
+
 
 
 ############################################
 #définition des variables globales
-l_u = 0
-l_d = 0
-z= 0
-d_u=0
-d_d=0
-y =0
+tableau = None
 
 
 
@@ -45,31 +51,58 @@ def carre():
 
 def Ligne():
     l_u,l_d = 0, hauteur
-    z =0
-    while z <= longueur:
-        canvas.create_line(l_u, z, l_d, z ,fill= "black")
-        z += cellule
+    y = 0
+    while y <= longueur:
+        canvas.create_line(l_u, y, l_d, y ,fill= "black")
+        y += cote
 def Vertical():
     d_u,d_d =0, longueur
-    y= 0
-    while y <= hauteur:
-        canvas.create_line(y, d_u, y, d_d,fill="black")
-        y += cellule
+    x= 0
+    while x <= hauteur:
+        canvas.create_line(x, d_u, x, d_d,fill="black")
+        x += cote
+
+def coord_carre(x, y):
+    return x // cote, y //cote
 
 
 
+def change_carre(event):
+    i, j = coord_carre(event.x, event.y)
+    if tableau[i][j] == 1:
+        x, y = i * cote, j * cote
+        carre =canvas.create_rectangle(x,y, x + cote, y + cote,fill= couleur_eau)
+        tableau[i][j] = 2
+    elif tableau [i][j] ==2:
+        x, y = i * cote, j * cote
+        carre =canvas.create_rectangle(x,y, x + cote, y + cote,fill= couleur_foret)
+        tableau[i][j]= 3
+    elif tableau [i][j] ==3:
+        x, y = i * cote, j * cote
+        carre =canvas.create_rectangle(x,y, x + cote, y + cote,fill= couleur_prairie)
+        tableau[i][j]= 1
+
+    
 
 
 
+def cree_carre():
+    global tableau
+    tableau=[]
+    for i in range(nombre_colonne):
+        tableau.append([1] * nombre_ligne)
 ############################################
 #programme principal 
 racine= tk.Tk()
 
 racine.title("simulation incendie")
 #canvas
-canvas= tk.Canvas(racine ,bg = "white", width = longueur, height=hauteur,bd= 2) 
+canvas= tk.Canvas(racine ,bg = "white", width = longueur, height=hauteur,bd= 2,) 
 canvas.grid(row =0)
 carre()
+cree_carre()
+canvas.bind("<Button-1>",change_carre)
+
 
 
 racine.mainloop()
